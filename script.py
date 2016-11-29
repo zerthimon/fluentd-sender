@@ -11,17 +11,20 @@ FLUENT_PORT = int(os.getenv('FLUENT_PORT', 24224))
 FLUENT_TAG = os.getenv('FLUENT_TAG', 'docker.docker-tag')
 
 if __name__ == "__main__":
-    custom_format = {
+    msgfmt = {
         'host': '%(hostname)s',
         'where': '%(module)s.%(funcName)s',
         'type': '%(levelname)s',
-        'stack_trace': '%(exc_text)s'
+        'stack_trace': '%(exc_text)s',
+        '@timestamp': '%(asctime)s.%(msecs)03d'
     }
+    datefmt = '%Y-%m-%dT%H:%M:%S'
 
     logging.basicConfig(level=logging.INFO)
+    logging.Formatter.converter = time.gmtime
     l = logging.getLogger('fluent.test')
     h = handler.FluentHandler(FLUENT_TAG, host=FLUENT_HOST, port=FLUENT_PORT)
-    formatter = handler.FluentRecordFormatter(custom_format)
+    formatter = handler.FluentRecordFormatter(msgfmt, datefmt=datefmt)
     h.setFormatter(formatter)
     l.addHandler(h)
 

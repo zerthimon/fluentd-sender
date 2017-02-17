@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#
+# docker run -d -e FLUENT_HOST=fluentd --link fluentd:fluentd zerthimon/fluentd-sender
 
 import os
 import logging
